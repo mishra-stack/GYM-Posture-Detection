@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Experts</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #121212;
+      padding: 40px 20px;
+      margin: 0;
+      color: #f1f1f1;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 40px;
+      color: #00e676;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    .expert-card {
+      background: #1e1e1e;
+      border-radius: 15px;
+      padding: 25px;
+      margin: 20px auto;
+      max-width: 400px;
+      box-shadow: 0 8px 20px rgba(0, 255, 135, 0.1);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .expert-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0, 255, 135, 0.2);
+    }
+
+    .expert-card i {
+      font-size: 50px;
+      color: #00e676;
+      margin-bottom: 15px;
+    }
+
+    .expert-card h3 {
+      margin: 10px 0 5px;
+      color: #ffffff;
+    }
+
+    .expert-card p {
+      color: #cccccc;
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+
+    .contact-btn {
+      background: linear-gradient(135deg, #00c853, #64dd17);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 15px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .contact-btn:hover {
+      background: linear-gradient(135deg, #00b248, #33691e);
+    }
+
+    #qrModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #qrModalContent {
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      max-width: 320px;
+      box-shadow: 0 5px 20px rgba(0,255,135,0.3);
+    }
+
+    #qrModal img {
+      width: 220px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    #qrModal button {
+      margin-top: 12px;
+      padding: 10px 20px;
+      background-color: #00c853;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s ease;
+    }
+
+    #qrModal button:hover {
+      background-color: #00b248;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Contact a Dietitian or Trainer</h2>
+
+<!-- Experts -->
+<div class="expert-card">
+  <i class="fas fa-user-md"></i>
+  <h3>Dr. Aarti Sharma</h3>
+  <p>Certified Dietitian – ₹500 per session</p>
+  <button class="contact-btn" onclick="showQR('Dr. Aarti Sharma', '{{ url_for('static', filename='upi.jpg') }}', 'https://wa.me/919999999999')">Pay & Contact</button>
+</div>
+
+<div class="expert-card">
+  <i class="fas fa-dumbbell"></i>
+  <h3>Dr. Ravi Mehta</h3>
+  <p>Fitness Trainer – ₹400 per session</p>
+  <button class="contact-btn" onclick="showQR('Ravi Mehta', '{{ url_for('static', filename='upi.jpg') }}', 'https://wa.me/919888888888')">Pay & Contact</button>
+</div>
+
+<div class="expert-card">
+  <i class="fas fa-apple-alt"></i>
+  <h3>Dr. Priya Nair</h3>
+  <p>Nutritionist – ₹600 per session</p>
+  <button class="contact-btn" onclick="showQR('Priya Nair', '{{ url_for('static', filename='upi.jpg') }}', 'https://wa.me/919777777777')">Pay & Contact</button>
+</div>
+
+<div class="expert-card">
+  <i class="fas fa-user-nurse"></i>
+  <h3>Dr. Neha Kapoor</h3>
+  <p>Clinical Nutrition Specialist – ₹550 per session</p>
+  <button class="contact-btn" onclick="showQR('Dr. Neha Kapoor', '{{ url_for('static', filename='upi.jpg') }}', 'https://wa.me/919666666666')">Pay & Contact</button>
+</div>
+
+<div class="expert-card">
+  <i class="fas fa-running"></i>
+  <h3>Dr. Arjun Verma</h3>
+  <p>Body Transformation Coach – ₹700 per session</p>
+  <button class="contact-btn" onclick="showQR('Arjun Verma', '{{ url_for('static', filename='upi.jpg') }}', 'https://wa.me/919555555555')">Pay & Contact</button>
+</div>
+
+<!-- Modal -->
+<div id="qrModal">
+  <div id="qrModalContent">
+    <h3 id="expertName"></h3>
+    <p>Scan & pay using any UPI app</p>
+    <img id="qrImage" src="" alt="UPI QR Code">
+    <br>
+    <button onclick="proceedToWhatsApp()">I have paid</button>
+    <br><br>
+    <button onclick="document.getElementById('qrModal').style.display='none'">Close</button>
+  </div>
+</div>
+
+<script>
+  let currentWhatsApp = '';
+  function showQR(name, qrSrc, whatsappLink) {
+    document.getElementById('expertName').innerText = name;
+    document.getElementById('qrImage').src = qrSrc;
+    currentWhatsApp = whatsappLink;
+    document.getElementById('qrModal').style.display = 'flex';
+  }
+
+  function proceedToWhatsApp() {
+    alert('Redirecting to WhatsApp...');
+    window.location.href = currentWhatsApp;
+  }
+</script>
+
+</body>
+</html>
